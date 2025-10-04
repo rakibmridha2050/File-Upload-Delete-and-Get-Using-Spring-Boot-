@@ -1,7 +1,10 @@
 package com.rakib.controller;
 
 
+import com.rakib.dtos.FileInfo;
 import com.rakib.dtos.ResponseMessage;
+import com.rakib.entity.FileData;
+import com.rakib.repositoty.FileDataRepository;
 import com.rakib.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("controller")
@@ -20,6 +27,7 @@ public class Controller {
 
 
     private final StorageService storageService;
+    private final FileDataRepository fileDataRepository;
 
 
 
@@ -53,4 +61,16 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
         }
     }
+
+    @GetMapping("/allfiles")
+
+    public ResponseEntity<?> getAllImage() throws IOException{
+        List<FileInfo> fileInfoList = storageService.getAllImage();
+
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfoList);
+    }
+
+
+
+
 }
