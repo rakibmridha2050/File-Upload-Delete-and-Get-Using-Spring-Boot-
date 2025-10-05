@@ -7,6 +7,7 @@ import com.rakib.entity.FileData;
 import com.rakib.repositoty.FileDataRepository;
 import com.rakib.service.StorageService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("controller")
+@RequestMapping("/controller")
 @RequiredArgsConstructor
+
 public class Controller {
 
 
@@ -43,7 +45,8 @@ public class Controller {
 
 
     @PostMapping(value = "/fileSystem", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Upload image file")
+    @Operation(summary = "Upload image file", description = "upload a  image .........................")
+    @ApiResponse(responseCode = "200", description = "asdfgh")
     public ResponseEntity<?> uploadImageToFileSystem(@RequestParam("image")MultipartFile file) throws IOException{
         String message = "";
 
@@ -63,13 +66,23 @@ public class Controller {
     }
 
     @GetMapping("/allfiles")
-
     public ResponseEntity<?> getAllImage() throws IOException{
         List<FileInfo> fileInfoList = storageService.getAllImage();
 
         return ResponseEntity.status(HttpStatus.OK).body(fileInfoList);
     }
 
+
+    @DeleteMapping("/name/{name}")
+    public ResponseEntity<?> deleteFileByName(@PathVariable String name) {
+        try {
+            storageService.deleteByName(name);
+            return ResponseEntity.ok(new ResponseMessage("File deleted successfully!"));
+        }catch (Exception e ){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Could not delete file: " + e.getMessage());
+        }
+
+    }
 
 
 

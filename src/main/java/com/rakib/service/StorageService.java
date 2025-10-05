@@ -95,4 +95,17 @@ public class StorageService {
         return fileInfos;
     }
 
+
+
+    public void deleteByName(String name){
+        FileData fileData = fileDataRepository.findByName(name).orElseThrow(() -> new RuntimeException("File not found: " + name));
+        File file  = new File(fileData.getFilePath());
+        if(file.exists() && !file.delete()){
+            throw  new RuntimeException("Failed to delete file from disk: " + fileData.getFilePath());
+        }
+
+        fileDataRepository.delete(fileData);
+    }
+
+
 }
